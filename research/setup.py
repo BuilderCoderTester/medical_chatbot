@@ -317,8 +317,9 @@ def create_rag_chain(vector_store,  search_k: int = 3):
 
 
 def query_rag_chain(rag_chain, model,tokenizer ,question: str) -> str:
-    # normal just querry answer 
     inputs = tokenizer(question, return_tensors="pt").to(model.device)
+    print(inputs)
+    print("do the agsugasuiydgaiuysuiaygduaygduy")
     
     with torch.no_grad():
         output = model.generate(
@@ -327,10 +328,10 @@ def query_rag_chain(rag_chain, model,tokenizer ,question: str) -> str:
             temperature=0.7
         )
 
-    print(tokenizer.decode(output[0], skip_special_tokens=True))
-
-    response = rag_chain.invoke({"input": question})
-    return response["answer"]
+    answer = tokenizer.decode(output[0], skip_special_tokens=True)
+    print("the problem is here")
+    # response = rag_chain.invoke({"input": question})
+    return answer
 
 
 # ============================================================================
@@ -384,12 +385,12 @@ def main():
     print("=" * 80)
     
     # Uncomment to create new vector store:
-    # vector_store = create_vector_store(
-    #     chunked_documents, 
-    #     embeddings, 
-    #     index_name,
-    #     batch_size=100  # Larger batches for GPU
-    # )
+    vector_store = create_vector_store(
+        chunked_documents, 
+        embeddings, 
+        index_name,
+        batch_size=100  # Larger batches for GPU
+    )
     
     # Load existing vector store:
     vector_store = load_existing_vector_store(index_name, embeddings)
